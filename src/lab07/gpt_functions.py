@@ -26,6 +26,13 @@ def get_yf_stock_history(ticker, period):
     return history.to_markdown()    # DataFrame을 Markdown 형식의 문자열로 변환해서 리턴.
 
 
+def get_yf_stock_recommendations(ticker):
+    """ticker에 해당하는 기업의 지난 4개월간 애널리스트들의 추천(매수, 매도, 유지) 데이터를 리턴."""
+    stock = yf.Ticker(ticker)   # Ticker 객체 생성
+    return stock.recommendations.to_markdown()  # recommendations 데이터프레임을 Markdown 형식의 문자열로 변환해서 리턴.
+
+
+
 
 # chat.completion 메시지를 요청할 때 함께 보내는 툴(도구) 리스트.
 # GPT에서 필요할 때 호출할 수 있도록 선언한 도구 리스트
@@ -56,5 +63,11 @@ if __name__ == '__main__':
     # print(get_current_time(timezone='America/New_York'))    # 미국
     # print(get_current_time(timezone='America/Los_Angeles'))
 
-    stock_info = get_yf_stock_info('GOOGL')
-    print(stock_info)
+    # stock_info = get_yf_stock_info('GOOGL')
+    # print(stock_info)
+
+    # stock_history = get_yf_stock_history('GOOGL', '3d')
+    # print(stock_history)
+
+    stock_recommend = get_yf_stock_recommendations('GOOGL')
+    print(stock_recommend)
