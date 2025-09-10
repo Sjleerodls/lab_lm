@@ -37,6 +37,7 @@ def get_yf_stock_recommendations(ticker):
 # chat.completion 메시지를 요청할 때 함께 보내는 툴(도구) 리스트.
 # GPT에서 필요할 때 호출할 수 있도록 선언한 도구 리스트
 tools = [
+    # get_current_time
     {
         'type':'function',      # 도구 타입 : 함수
         'function': {
@@ -51,6 +52,56 @@ tools = [
                 'required' : ['timezone'],      # parameters.properties 중에서 필수 파라미터의 목록.
             },  # 파라미터들에 대한 설명.
         }   # 함수 설명
+    },
+    # get_yf_stock_info 정보
+    {
+        'type':'function',
+        'function': {
+            'name' : 'get_yf_stock_info',
+            'description': '해당 기업의 info를 문자열로 리턴 / Yahoo Finance 기업 정보를 반환.',
+            'parameters':{
+                'type': 'object',
+                'properties' : {
+                    'ticker': {'type': 'string',
+                               'description': '해당되는 기업의 정보를 key/value 형태로 반환 / Yahoo Finance 기업 정보를 반환하기 위해 필요한 종목 ticker 문자열. (예: AAPL, AMAZ)'}
+                },
+                'required' : ['ticker']
+            }
+        }
+    },
+    # get_yf_stock_history 정보
+    {
+        'type':'function',
+        'function': {
+            'name' : 'get_yf_stock_history',
+            'description': '해당 기업의 history를 마크다운 형태로 리턴 / Yahoo Finance에서 기업의 해당 기간 동안의 주가 정보(시가, 고가, 저가, 종가, 거래량, ...)를 반환.',
+            'parameters':{
+                'type': 'object',
+                'properties': {
+                    'ticker': {'type': 'string',
+                               'description': '현재 시점을 기준으로 과거 period의 주가 정보를 Markdown으로 반환. / 주가 정보를 반환하기 위한 종목의 ticker 문자열. (예: AAPL, AMZN)'},
+                    'period': {'type': 'string',
+                               'description': '기간을 의미함 (예: 1mo - 1 months, 5d - 5 days, 8y - 8 years)'}
+                },
+                'required': ['ticker', 'period'],
+            }
+        }
+    },
+    # get_yf_stock_recommendations 정보
+    {
+        'type':'function',
+        'function': {
+            'name' : 'get_yf_stock_recommendations',
+            'description': '해당 기업의 4개월간 애널리스트들의 추천 데이터를 리턴 / Yahoo Finance의 해당 종목에 대한 애널리스트들의 추천 정보(매수, 매도, 유지, ...)를 반환.',
+            'parameters':{
+                'type': 'object',
+                'properties': {
+                    'ticker': {'type': 'string',
+                               'description': 'recommendations 데이터프레임을 Markdown 형식의 문자열로 변환 / 애널리스트들의 추천 정보를 조회하기 위한 종목 ticker 문자열. (예: AAPL, AMZN)'}
+                },
+                'required': ['ticker']
+            }
+        }
     }
 ]
 
